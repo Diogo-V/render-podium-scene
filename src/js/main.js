@@ -27,26 +27,6 @@ class Main {
   #compound
 
   /**
-   * Holds litter in hemisphere 1.
-   */
-  #litter_h1
-
-  /**
-   * Holds litter in hemisphere 2.
-   */
-  #litter_h2
-
-  /**
-   * Holds litter in hemisphere 3.
-   */
-  #litter_h3
-
-  /**
-   * Holds litter in hemisphere 4.
-   */
-  #litter_h4
-
-  /**
    * Holds clock value and determines delta time. This allows for pcs with lower fps to still get a good image.
    */
   #clock
@@ -68,10 +48,6 @@ class Main {
     /* Builds components required to manage, control and display our scene */
     this.#renderer = Main.#initRenderer()
     this.#sceneObjects = Array()
-    this.#litter_h1 = Array()
-    this.#litter_h2 = Array()
-    this.#litter_h3 = Array()
-    this.#litter_h4 = Array()
     this.#compound = new CompoundObject()
     let [scene, followCamera, sceneScale]  = this.#initScene()
     this.#sceneScale = sceneScale
@@ -180,17 +156,6 @@ class Main {
    */
   getController() { return this.#controller }
 
-  /** Check wich hemisphere the litter is*/
-  #addHemisphere = (m) => {
-    if (m.position.x >= 0 && m.position.z >= 0)
-      this.#litter_h1.push(m);
-    else if (m.position.x < 0 && m.position.z >= 0)
-      this.#litter_h2.push(m);
-    else if (m.position.x >= 0 && m.position.z < 0)
-      this.#litter_h3.push(m);
-    else if (m.position.x < 0 && m.position.z < 0)
-      this.#litter_h4.push(m);
-  }
 
   /**
    * Adds objects to the scene.
@@ -198,420 +163,81 @@ class Main {
   #buildScene = (scene, followCamera, r) => {
     'use strict'
 
-    let radius
     let geometry
     let material
-    let widthSegments
-    let heightSegments
-    let ball
-    let height
-    let cube
-    let depth
-    let depthSegments
     let width
-    let spaceshipBody
-    let spaceshipHead
+    let height
+    let depth
+    let step
+    let body
+    let top
+    let floor
 
-    // World
-    radius = _EARTH_RADIUS
-    widthSegments = 32
-    heightSegments = 32
-    geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments)
-    material = new THREE.MeshBasicMaterial({color: 0xfffff})
-    ball = new THREE.Mesh(geometry, material)
-    ball.position.x = 0
-    ball.position.y = 0
-    ball.position.z = 0
-    r.add(ball)
-    this.#sceneObjects.push(ball)
+    // Palanque
+    width = 60  // ui: width
+    height = 15  // ui: height
+    depth = 80  // ui: depth
+    geometry = new THREE.BoxGeometry(width, height, depth)
+    material = new THREE.MeshBasicMaterial({color: 0xA0522D})
+    step = new THREE.Mesh(geometry, material)
+    step.position.x = 0
+    step.position.y = -80
+    step.position.z = -5
+    r.add(step)
+    this.#sceneObjects.push(step)
 
-    // Orbital trash
-    let min
-    let max
-    let size
-    let x
-    let y
-    let z
-    let pos
-    let radialSegments
+    width = 60  // ui: width
+    height = 10  // ui: height
+    depth = 60  // ui: depth
+    geometry = new THREE.BoxGeometry(width, height, depth)
+    material = new THREE.MeshBasicMaterial({color: 0xA0522D})
+    step = new THREE.Mesh(geometry, material)
+    step.position.x = 0
+    step.position.y = -67.5
+    step.position.z = 5
+    r.add(step)
+    this.#sceneObjects.push(step)
 
-    //Cubes
-    for (var i= 0 ;i<5;i+=1) {
-      min = Math.ceil(_EARTH_RADIUS/24);
-      max = Math.floor(_EARTH_RADIUS/20);
-      size = Math.floor(Math.random() * (max - min)) + min
+    width = 35  // ui: width
+    height = 60  // ui: height
+    depth = 25  // ui: depth
+    geometry = new THREE.BoxGeometry(width, height, depth)
+    material = new THREE.MeshBasicMaterial({color: 0xA0522D})
+    body = new THREE.Mesh(geometry, material)
+    body.position.x = 0
+    body.position.y = -32.5
+    body.position.z = 18
+    r.add(body)
+    this.#sceneObjects.push(body)
 
-      width = size  // ui: width
-      height = size  // ui: height
-      depth = size  // ui: depth
-      widthSegments = 5  // ui: widthSegments
-      heightSegments = 5  // ui: heightSegments
-      depthSegments = 5  // ui: depthSegments
-      geometry = new THREE.BoxGeometry(width, height, depth, widthSegments, heightSegments, depthSegments)
-      material = new THREE.MeshBasicMaterial( { color: 0xfc9803 } )
-      cube = new THREE.Mesh( geometry, material )
+    width = 100  // ui: width
+    height = 10  // ui: height
+    depth = 50  // ui: depth
+    geometry = new THREE.BoxGeometry(width, height, depth)
+    material = new THREE.MeshBasicMaterial({color: 0xA0522D})
+    top = new THREE.Mesh(geometry, material)
+    top.position.x = 0
+    top.position.y = 2.5
+    top.position.z = 18
+    r.add(top)
+    this.#sceneObjects.push(top)
 
-      min = Math.ceil(_EARTH_RADIUS*1.2)
-      max = Math.floor(-(_EARTH_RADIUS*1.2))
-      x = Math.floor(Math.random() * (max - min)) + min
-      y = Math.floor(Math.random() * (max - min)) + min
-      pos = Math.random()
-      if (pos >= 0.5)
-        z = Math.sqrt((_EARTH_RADIUS*1.2)**2 - x**2 - y**2)
-      else
-        z = -Math.sqrt((_EARTH_RADIUS*1.2)**2 - x**2 - y**2)
 
-      cube.position.x = x
-      cube.position.y = y
-      cube.position.z = z
-      cube.raioCol = (Math.sqrt(3)/2)*size
+    //Floor
+    width = 1500 // ui: width
+    height = 200  // ui: height
+    depth = 600  // ui: depth
+    geometry = new THREE.BoxGeometry(width, height, depth)
+    material = new THREE.MeshBasicMaterial({color: 0xffffff})
+    floor = new THREE.Mesh(geometry, material)
+    floor.position.x = 0
+    floor.position.y = -187.5
+    floor.position.z = 0
+    r.add(floor)
+    this.#sceneObjects.push(floor)
 
-      let check = true
-
-      /* Check for collisions in the first hemisphere */
-      for (let j = 0; j < this.#sceneObjects.length; j++) {
-
-        /* Call function to detect collision*/
-        let x1 = this.#sceneObjects[i].position.x;
-        let y1 = this.#sceneObjects[i].position.y;
-        let z1 = this.#sceneObjects[i].position.z;
-
-        let x2 = Math.abs(x1 - x);
-        let y2 = Math.abs(y1 - y);
-        let z2 = Math.abs(z1 - z);
-
-        let distance = Math.sqrt((x2 * x2) + (y2 * y2) + (z2 * z2));
-
-        /* We have to remove this litter from the scene*/
-        if (distance <= this.#sceneObjects[i].raioCol + cube.raioCol) {
-          r.remove(this.#sceneObjects[i])
-
-          this.#sceneObjects.slice(i, 1)
-          check = false
-          i -= 1
-        }
-
-      }
-      if (check) {
-        r.add(cube)
-        this.#sceneObjects.push(cube)
-        this.#addHemisphere(cube)
-      }
-
-    }
-
-    //Cylinders
-    for (var i= 0 ;i<5;i+=1) {
-      min = Math.ceil(_EARTH_RADIUS/24);
-      max = Math.floor(_EARTH_RADIUS/20);
-      height = Math.floor(Math.random() * (max - min)) + min
-      radius = Math.floor(Math.random() * (max - min)) + min
-      radius = radius/2
-
-      radialSegments = 30  // ui: depthSegments
-      geometry = new THREE.CylinderGeometry(radius, radius, height, radialSegments)
-      material = new THREE.MeshBasicMaterial( { color: 0xfc9803 } )
-      cube = new THREE.Mesh( geometry, material )
-      cube.raioCol = Math.sqrt((radius**2) + ((height/2)**2))
-
-      min = Math.ceil(_EARTH_RADIUS*1.2)
-      max = Math.floor(-(_EARTH_RADIUS*1.2))
-      x = Math.floor(Math.random() * (max - min)) + min
-      y = Math.floor(Math.random() * (max - min)) + min
-      pos = Math.random()
-      if (pos >= 0.5)
-        z = Math.sqrt((_EARTH_RADIUS*1.2)**2 - x**2 - y**2)
-      else
-        z = -Math.sqrt((_EARTH_RADIUS*1.2)**2 - x**2 - y**2)
-
-      cube.position.x = x
-      cube.position.y = y
-      cube.position.z = z
-      r.add(cube)
-      this.#sceneObjects.push(cube)
-      this.#addHemisphere(cube)
-
-      let check = true
-
-      /* Check for collisions in the first hemisphere */
-      for (let j = 0; j < this.#sceneObjects.length; j++) {
-
-        /* Call function to detect collision*/
-        let x1 = this.#sceneObjects[i].position.x;
-        let y1 = this.#sceneObjects[i].position.y;
-        let z1 = this.#sceneObjects[i].position.z;
-
-        let x2 = Math.abs(x1 - x);
-        let y2 = Math.abs(y1 - y);
-        let z2 = Math.abs(z1 - z);
-
-        let distance = Math.sqrt((x2 * x2) + (y2 * y2) + (z2 * z2));
-
-        /* We have to remove this litter from the scene*/
-        if (distance <= this.#sceneObjects[i].raioCol + cube.raioCol) {
-          r.remove(this.#sceneObjects[i])
-
-          this.#sceneObjects.slice(i, 1)
-          check = false
-          i -= 1
-        }
-
-      }
-      if (check) {
-        r.add(cube)
-        this.#sceneObjects.push(cube)
-        this.#addHemisphere(cube)
-      }
-    }
-
-    //Cones
-    for (var i= 0 ;i<5;i+=1) {
-      min = Math.ceil(_EARTH_RADIUS/24);
-      max = Math.floor(_EARTH_RADIUS/20);
-      height = Math.floor(Math.random() * (max - min)) + min
-      radius = Math.floor(Math.random() * (max - min)) + min
-      radius = radius/2
-
-      radialSegments = 30  // ui: depthSegments
-      geometry = new THREE.ConeGeometry(radius, height, radialSegments)
-      material = new THREE.MeshBasicMaterial( { color: 0xfc9803 } )
-      cube = new THREE.Mesh( geometry, material )
-
-      min = Math.ceil(_EARTH_RADIUS*1.2)
-      max = Math.floor(-(_EARTH_RADIUS*1.2))
-      cube.raioCol = Math.sqrt((radius**2) + ((height/2)**2))
-      min = Math.ceil(84)
-      max = Math.floor(-84)
-      x = Math.floor(Math.random() * (max - min)) + min
-      y = Math.floor(Math.random() * (max - min)) + min
-      pos = Math.random()
-      if (pos >= 0.5)
-        z = Math.sqrt((_EARTH_RADIUS*1.2)**2 - x**2 - y**2)
-      else
-        z = -Math.sqrt((_EARTH_RADIUS*1.2)**2 - x**2 - y**2)
-
-      cube.position.x = x
-      cube.position.y = y
-      cube.position.z = z
-      r.add(cube)
-      this.#sceneObjects.push(cube)
-      this.#addHemisphere(cube)
-
-      let check = true
-
-      /* Check for collisions in the first hemisphere */
-      for (let j = 0; j < this.#sceneObjects.length; j++) {
-
-        /* Call function to detect collision*/
-        let x1 = this.#sceneObjects[i].position.x;
-        let y1 = this.#sceneObjects[i].position.y;
-        let z1 = this.#sceneObjects[i].position.z;
-
-        let x2 = Math.abs(x1 - x);
-        let y2 = Math.abs(y1 - y);
-        let z2 = Math.abs(z1 - z);
-
-        let distance = Math.sqrt((x2 * x2) + (y2 * y2) + (z2 * z2));
-
-        /* We have to remove this litter from the scene*/
-        if (distance <= this.#sceneObjects[i].raioCol + cube.raioCol) {
-          r.remove(this.#sceneObjects[i])
-
-          this.#sceneObjects.slice(i, 1)
-          check = false
-          i -= 1
-        }
-
-      }
-      if (check) {
-        r.add(cube)
-        this.#sceneObjects.push(cube)
-        this.#addHemisphere(cube)
-      }
-    }
-
-    //Pyramids
-    for (var i= 0 ;i<5;i+=1) {
-      min = Math.ceil(_EARTH_RADIUS/24);
-      max = Math.floor(_EARTH_RADIUS/20);
-      height = Math.floor(Math.random() * (max - min)) + min
-      radius = Math.floor(Math.random() * (max - min)) + min
-      radius = radius/2
-
-      radialSegments = 4  // ui: depthSegments
-      geometry = new THREE.ConeGeometry(radius, height, radialSegments)
-      material = new THREE.MeshBasicMaterial( { color: 0xfc9803 } )
-      cube = new THREE.Mesh( geometry, material )
-      cube.raioCol = Math.sqrt((radius**2) + ((height/2)**2))
-
-      min = Math.ceil(_EARTH_RADIUS*1.2)
-      max = Math.floor(-(_EARTH_RADIUS*1.2))
-      x = Math.floor(Math.random() * (max - min)) + min
-      y = Math.floor(Math.random() * (max - min)) + min
-      pos = Math.random()
-      if (pos >= 0.5)
-        z = Math.sqrt((_EARTH_RADIUS*1.2)**2 - x**2 - y**2)
-      else
-        z = -Math.sqrt((_EARTH_RADIUS*1.2)**2 - x**2 - y**2)
-
-      cube.position.x = x
-      cube.position.y = y
-      cube.position.z = z
-
-      r.add(cube)
-      this.#sceneObjects.push(cube)
-      this.#addHemisphere(cube)
-
-      let check = true
-
-      /* Check for collisions in the first hemisphere */
-      for (let j = 0; j < this.#sceneObjects.length; j++) {
-
-        /* Call function to detect collision*/
-        let x1 = this.#sceneObjects[i].position.x;
-        let y1 = this.#sceneObjects[i].position.y;
-        let z1 = this.#sceneObjects[i].position.z;
-
-        let x2 = Math.abs(x1 - x);
-        let y2 = Math.abs(y1 - y);
-        let z2 = Math.abs(z1 - z);
-
-        let distance = Math.sqrt((x2 * x2) + (y2 * y2) + (z2 * z2));
-
-        /* We have to remove this litter from the scene*/
-        if (distance <= this.#sceneObjects[i].raioCol + cube.raioCol) {
-          r.remove(this.#sceneObjects[i])
-
-          this.#sceneObjects.slice(i, 1)
-          check = false
-          i -= 1
-        }
-
-      }
-      if (check) {
-        r.add(cube)
-        this.#sceneObjects.push(cube)
-        this.#addHemisphere(cube)
-      }
-    }
-
-    // Spaceship
-    const group = new THREE.Group();
-    min = Math.ceil(_EARTH_RADIUS*1.2)
-    max = Math.floor(-(_EARTH_RADIUS*1.2))
-    x = Math.floor(Math.random() * (max - min)) + min
-    y = Math.floor(Math.random() * (max - min)) + min
-    pos = Math.random()
-    if (pos >= 0.5)
-      z = Math.sqrt((_EARTH_RADIUS*1.2)**2 - x**2 - y**2)
-    else
-      z = -Math.sqrt((_EARTH_RADIUS*1.2)**2 - x**2 - y**2)
-
-    geometry = new THREE.CylinderGeometry(3, 3, 5, 32)
-    material = new THREE.MeshBasicMaterial({color: 0xffff00})
-    spaceshipBody = new THREE.Mesh(geometry, material)
-    spaceshipBody.position.x = 0
-    spaceshipBody.position.y = 0
-    spaceshipBody.position.z = 0
-    this.getCompound().setPrimary(spaceshipBody)
-    this.getCompound().setSecondary(followCamera)
-    followCamera.position.x = 0
-    followCamera.position.y = -30
-    followCamera.position.z = -30
-    followCamera.lookAt(this.getCompound().getGroup().position)
-
-    spaceshipBody.position.x = x
-    spaceshipBody.position.y = y
-    spaceshipBody.position.z = z
-
-    geometry = new THREE.CylinderGeometry(1, 1, 0.5, 32)
-    material = new THREE.MeshBasicMaterial({color: 0xffff00})
-    spaceshipHead = new THREE.Mesh(geometry, material)
-    spaceshipHead.position.y = 3.5
-    this.getCompound().setSecondary(spaceshipHead)
-
-    geometry = new THREE.CapsuleGeometry( 0.6, 1, 4, 8 );
-    material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    let capsule = new THREE.Mesh( geometry, material );
-    capsule.position.x = 0
-    capsule.position.y = -2
-    capsule.position.z = 2.8
-    this.getCompound().setSecondary(capsule)
-
-    geometry = new THREE.CapsuleGeometry( 0.6, 1, 4, 8 );
-    material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    capsule = new THREE.Mesh( geometry, material );
-    capsule.position.x = -2.8
-    capsule.position.y = -2
-    capsule.position.z = 0
-    this.getCompound().setSecondary(capsule)
-
-    geometry = new THREE.CapsuleGeometry( 0.6, 1, 4, 8 );
-    material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    capsule = new THREE.Mesh( geometry, material );
-    capsule.position.x = 2.8
-    capsule.position.y = -2
-    capsule.position.z = 0
-    this.getCompound().setSecondary(capsule)
-
-    geometry = new THREE.CapsuleGeometry( 0.6, 1, 4, 8 );
-    material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    capsule = new THREE.Mesh( geometry, material );
-    capsule.position.x = 0
-    capsule.position.y = -2
-    capsule.position.z = -2.8
-    this.getCompound().setSecondary(capsule)
-
-    this.#compound.raioCol = Math.sqrt(((spaceshipBody.geometry.parameters.height +
-            spaceshipHead.geometry.parameters.height)**2) + ((spaceshipHead.geometry.parameters.radiusTop/2)**2))
-
-    r.add(this.getCompound().getGroup())
     scene.add(r)
-    this.#sceneObjects.push(this.getCompound().getGroup())
 
-  }
-
-  /**
-   * Check for collisions. If there is a collision, remove the litter from the scene
-   */
-  #checkCollision = (list) => {
-    let x2 = this.getCompound().getPrimary().position.x;
-    let y2 = this.getCompound().getPrimary().position.y;
-    let z2 = this.getCompound().getPrimary().position.z;
-
-    /* Check for collisions in the first hemisphere */
-    for (let i = 0; i < list.length; i++) {
-
-      /* Call function to detect collision*/
-      let x1 = list[i].position.x;
-      let y1 = list[i].position.y;
-      let z1 = list[i].position.z;
-
-      let x = Math.abs(x1 - x2);
-      let y = Math.abs(y1 - y2);
-      let z = Math.abs(z1 - z2);
-
-      let distance = Math.sqrt((x * x) + (y * y) + (z * z));
-
-      /* We have to remove this litter from the scene*/
-      if (distance <= list[i].raioCol + this.#compound.raioCol) {
-        this.#sceneScale.remove(list[i])
-
-        list.slice(i, 1)
-      }
-
-    }
-  }
-
-  #checkCollisionHemisphere = (x, z) =>{
-    if (x >= 0 && z >= 0)
-      this.#checkCollision(this.#litter_h1)
-    else if (x < 0 && z >= 0)
-      this.#checkCollision(this.#litter_h2)
-    else if (x >= 0 && z < 0)
-      this.#checkCollision(this.#litter_h3)
-    else if (x < 0 && z < 0)
-      this.#checkCollision(this.#litter_h4)
   }
 
   /**
@@ -631,12 +257,8 @@ class Main {
     /* Gets the elapsed time from the previous frame. This makes fps smoother in lower end pc's */
     let delta = this.getClock().getDelta()
 
-    this.#checkCollisionHemisphere(this.getCompound().getPrimary().position.x, this.getCompound().getPrimary().position.z)
-
     /* Prompts key controller to check which keys were pressed and to delegate actions to the various components */
-    this.getController().processKeyPressed(this.getContext(), this.getSceneObjects(), this.getCompound(), delta, _EARTH_RADIUS*1.2)
-
-    this.getCompound().getPrimary().lookAt(0, 0, 0)
+    this.getController().processKeyPressed(this.getContext(), this.getSceneObjects(), this.getCompound(), delta)
 
   }
 
@@ -656,5 +278,3 @@ class Main {
   }
 
 }
-
-const _EARTH_RADIUS = 70

@@ -66,9 +66,8 @@ class KeyController {
    * @param objects {Array<Mesh>}
    * @param compound {CompoundObject}
    * @param delta {number}
-   * @param radius {number}
    */
-  processKeyPressed = (context, objects, compound, delta, radius) => {
+  processKeyPressed = (context, objects, compound, delta) => {
     'use strict'
 
     // Holds array with currently being pressed direction. This will be latter on passed to the compound object's
@@ -112,9 +111,6 @@ class KeyController {
     if (this.getMap()[39]) {  // key -> right
       movement.push(Direction.RIGHT)
     }
-
-    /* If any key was pressed, we call the update function of the spaceship */
-    compound.move(movement, delta, radius)
 
   }
 
