@@ -236,6 +236,80 @@ class Main {
     r.add(floor)
     this.#sceneObjects.push(floor)
 
+    //Origami 1
+    geometry = new THREE.BufferGeometry();
+
+    var vertices = new Float32Array( [
+      0,   0,  10,    // v1
+      15,  15,  15,  // v3
+      0,   30, 10,   // v2
+
+      0,   0,  10,    // v1
+      0,   30, 10,
+      -15, 15,  15,    //v4
+
+      ]);
+
+    geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+    material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    let object = new THREE.Mesh( geometry, material );
+
+    object.position.x = -50
+    object.position.y = 15
+    object.position.z = 0
+
+    r.add(object)
+    this.#sceneObjects.push(object)
+
+    //Origami 2
+    geometry = new THREE.BufferGeometry();
+
+    var vertices = new Float32Array( [
+      0, 0,    0,
+      5.5, 24.5, 0,
+      0, 30,   0,
+
+      0, 0,    0,
+      0, 30,   0,
+      -5.5, 24.5, 0,
+
+      0, 0,    0,
+      5.5, 24.5, 0,
+      0, 23,   1,
+
+      0, 0,    0,
+      0, 23,   1,
+      -5.5, 24.5, 0,
+
+      0, 0,    0,
+      4, 21,   0,
+      0, 23,   1,
+
+      0, 0,    0,
+      0, 23,   1,
+      -4, 21,  0,
+
+      0, 0,    0,
+      4, 21,   0,
+      0, 21,  -1,
+
+      0, 0,    0,
+      0, 21,   -1,
+      -4, 21,  0
+
+      ]);
+
+    geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+    material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    object = new THREE.Mesh( geometry, material );
+
+    object.position.x = 0
+    object.position.y = 15
+    object.position.z = 10
+
+    r.add(object)
+    this.#sceneObjects.push(object)
+
     scene.add(r)
 
   }
