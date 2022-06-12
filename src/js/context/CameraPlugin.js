@@ -27,20 +27,20 @@ class CameraPlugin {
    * CameraPlugin class constructor. We set the frontal camera as the default one.
    */
   constructor(scene, followCamera) {
-    this.#buildFrontCamera(scene)
+    this.#buildPerspectiveCamera(scene)
     this.#buildFollowCamera(followCamera)
-    this.#buildSideCamera(scene)
+    this.#buildSceneCamera(scene)
     this.#currentCamera = this.#front
   }
 
   /**
    * Builds Three.js camera with a front view of the scene.
    */
-  #buildFrontCamera(scene) {
+  #buildPerspectiveCamera(scene) {
     let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
-    camera.position.x = 0
-    camera.position.y = 0
-    camera.position.z = 300
+    camera.position.x = 150
+    camera.position.y = 100
+    camera.position.z = 150
     camera.lookAt(scene.position)
     this.#front = camera
   }
@@ -55,12 +55,12 @@ class CameraPlugin {
   /**
    * Builds Three.js camera with a side view of the scene.
    */
-  #buildSideCamera(scene) {
+  #buildSceneCamera(scene) {
     let camera = new THREE.OrthographicCamera(window.innerWidth / -__SHIFT_FRONTAL, window.innerWidth / __SHIFT_FRONTAL,
     window.innerHeight / __SHIFT_FRONTAL, window.innerHeight / -__SHIFT_FRONTAL)
-    camera.position.x = 1000
-    camera.position.y = 0
-    camera.position.z = 0
+    camera.position.x = 0
+    camera.position.y = 80
+    camera.position.z = -200
     camera.lookAt(scene.position)
     this.#side = camera
   }
@@ -124,4 +124,4 @@ class CameraPlugin {
 
 /* Holds type of camera that can be instantiated (front, top and side view) */
 const __FRONTAL = 0, __FOLLOW = 1, __SIDE = 2
-const __SHIFT_FRONTAL = 7
+const __SHIFT_FRONTAL = 8
