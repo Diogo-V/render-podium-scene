@@ -70,6 +70,13 @@ class Main {
      this.getController().onKeyUp(event)
     }.bind(this), false)
 
+    window.addEventListener('resize', function (event) {
+      this.getContext().getCamera().aspect = window.innerWidth / window.innerHeight;
+      this.getContext().getCamera().updateProjectionMatrix();
+
+      this.getRenderer().setSize( window.innerWidth, window.innerHeight );
+    }.bind(this), false);
+
   }
 
   /**
