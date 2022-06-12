@@ -49,10 +49,10 @@ class Main {
     this.#renderer = Main.#initRenderer()
     this.#sceneObjects = Array()
     this.#compound = new CompoundObject()
-    let [scene, followCamera, sceneScale]  = this.#initScene()
+    let [scene, sceneScale]  = this.#initScene()
     this.#sceneScale = sceneScale
     this.#scene = scene
-    this.#context = new ContextManagementEngine(this.getScene(), followCamera)
+    this.#context = new ContextManagementEngine(this.getScene())
     this.#controller = new KeyController()
     this.#clock = new THREE.Clock(true)
 
@@ -87,14 +87,12 @@ class Main {
     /* Creates scene  */
     let scene = new THREE.Scene()
 
-    let followCamera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 1000)
-
     let r = new THREE.Object3D()
 
     /* Adds rest of objects to the scene */
-    this.#buildScene(scene, followCamera, r)
+    this.#buildScene(scene, r)
 
-    return [scene, followCamera, r]
+    return [scene, r]
   }
 
   /**
@@ -172,7 +170,7 @@ class Main {
   /**
    * Adds objects to the scene.
    */
-  #buildScene = (scene, followCamera, r) => {
+  #buildScene = (scene, r) => {
     'use strict'
 
     let geometry
