@@ -9,10 +9,16 @@ class ContextManagementEngine {
   #camera
 
   /**
+   * Holds lights plugin. This will update the lights in the scene
+   */
+  #lights
+
+  /**
    * ContextManagementEngine class constructor.
    */
   constructor(scene, followCamera) {
     this.#camera = new CameraPlugin(scene, followCamera)
+    this.#lights = new LightsPlugin(scene)
   }
 
   /**

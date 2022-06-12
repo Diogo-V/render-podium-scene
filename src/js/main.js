@@ -70,10 +70,9 @@ class Main {
      this.getController().onKeyUp(event)
     }.bind(this), false)
 
-    window.addEventListener('resize', function (event) {
+    window.addEventListener('resize', function (_) {
       this.getContext().getCamera().aspect = window.innerWidth / window.innerHeight;
       this.getContext().getCamera().updateProjectionMatrix();
-
       this.getRenderer().setSize( window.innerWidth, window.innerHeight );
     }.bind(this), false);
 
@@ -325,64 +324,10 @@ class Main {
     object.position.y = 15
     object.position.z = 10
     object.castShadow = true
-
     r.add(object)
     this.#sceneObjects.push(object)
 
-    // #################################################### LIGHTS #####################################################
-
-    const directLight = new THREE.DirectionalLight( 0xffffff, 0.1 );
-    directLight.position.set(0, 80, 80)
-    r.add(directLight)
-
-    this.#buildSpotLight(r, -30, 18)
-
-    this.#buildSpotLight(r, 0, 18)
-
-    this.#buildSpotLight(r, 30, 18)
-
     scene.add(r)
-
-  }
-
-  /**
-   * Builds a spotlight that points downwards in input coordinates.
-   *
-   * @param scene scene to add the spotlight
-   * @param x spotlight x coordinates
-   * @param z spotlight z coordinates
-   */
-  #buildSpotLight = (scene, x, z) => {
-
-    let geometry = new THREE.SphereGeometry(2, 32, 32)
-    let material = new THREE.MeshPhongMaterial({color: 0xffffff, dithering: true})
-    let ball = new THREE.Mesh(geometry, material)
-    ball.position.set(x, 80, z)
-    scene.add(ball)
-
-    geometry = new THREE.ConeGeometry(5, 10, 32)
-    material = new THREE.MeshPhongMaterial({color: 0xffffff, dithering: true})
-    let cone = new THREE.Mesh(geometry, material)
-    cone.position.set(x, 73, z)
-    scene.add(cone)
-
-    let spotLight = new THREE.SpotLight(0xffffff, 0.5);
-    spotLight.position.set(x, 70, z);
-    spotLight.angle = Math.PI / 8;
-    spotLight.penumbra = 0.1;
-    spotLight.decay = 2;
-    spotLight.distance = 200;
-
-    spotLight.target.position.set(x, 0, z)
-    scene.add(spotLight.target)
-
-    spotLight.castShadow = true;
-    spotLight.shadow.mapSize.width = 512;
-    spotLight.shadow.mapSize.height = 512;
-    spotLight.shadow.camera.near = 10;
-    spotLight.shadow.camera.far = 200;
-    spotLight.shadow.focus = 1;
-    scene.add(spotLight);
 
   }
 
