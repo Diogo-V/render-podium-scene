@@ -107,7 +107,13 @@ class Main {
     'use strict'
 
     /*  (we set this to the max size of the screen) */
-    let renderer = new THREE.WebGLRenderer({ antialias: true })
+    let renderer = new THREE.WebGLRenderer()
+
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+
     renderer.setSize(window.innerWidth, window.innerHeight)
     document.body.appendChild(renderer.domElement)
 
@@ -178,18 +184,19 @@ class Main {
     let step
     let body
     let top
-    let floor
 
-    // Palanque
+    // #################################################### PODIUM #####################################################
+
     width = 60  // ui: width
     height = 15  // ui: height
     depth = 80  // ui: depth
     geometry = new THREE.BoxGeometry(width, height, depth)
-    material = new THREE.MeshBasicMaterial({color: 0xA0522D})
+    material = new THREE.MeshPhongMaterial({color: 0xA0522D, dithering: true})
     step = new THREE.Mesh(geometry, material)
     step.position.x = 0
     step.position.y = -80
     step.position.z = -5
+    step.castShadow = true;
     r.add(step)
     this.#sceneObjects.push(step)
 
@@ -197,11 +204,12 @@ class Main {
     height = 10  // ui: height
     depth = 60  // ui: depth
     geometry = new THREE.BoxGeometry(width, height, depth)
-    material = new THREE.MeshBasicMaterial({color: 0xA0522D})
+    material = new THREE.MeshPhongMaterial({color: 0xA0522D, dithering: true})
     step = new THREE.Mesh(geometry, material)
     step.position.x = 0
     step.position.y = -67.5
     step.position.z = 5
+    step.castShadow = true;
     r.add(step)
     this.#sceneObjects.push(step)
 
@@ -209,11 +217,12 @@ class Main {
     height = 60  // ui: height
     depth = 25  // ui: depth
     geometry = new THREE.BoxGeometry(width, height, depth)
-    material = new THREE.MeshBasicMaterial({color: 0xA0522D})
+    material = new THREE.MeshPhongMaterial({color: 0xA0522D, dithering: true})
     body = new THREE.Mesh(geometry, material)
     body.position.x = 0
     body.position.y = -32.5
     body.position.z = 18
+    body.castShadow = true;
     r.add(body)
     this.#sceneObjects.push(body)
 
@@ -221,29 +230,29 @@ class Main {
     height = 10  // ui: height
     depth = 50  // ui: depth
     geometry = new THREE.BoxGeometry(width, height, depth)
-    material = new THREE.MeshBasicMaterial({color: 0xA0522D})
+    material = new THREE.MeshPhongMaterial({color: 0xA0522D, dithering: true})
     top = new THREE.Mesh(geometry, material)
     top.position.x = 0
     top.position.y = 2.5
     top.position.z = 18
+    top.castShadow = true;
     r.add(top)
     this.#sceneObjects.push(top)
 
+    // ##################################################### FLOOR #####################################################
 
-    //Floor
-    width = 1500 // ui: width
-    height = 200  // ui: height
-    depth = 600  // ui: depth
-    geometry = new THREE.BoxGeometry(width, height, depth)
-    material = new THREE.MeshBasicMaterial({color: 0xffffff})
-    floor = new THREE.Mesh(geometry, material)
-    floor.position.x = 0
-    floor.position.y = -187.5
-    floor.position.z = 0
-    r.add(floor)
+    material = new THREE.MeshPhongMaterial( { color: 0x00FF00, dithering: true } );
+    geometry = new THREE.PlaneGeometry( 2000, 2000 );
+    let floor = new THREE.Mesh( geometry, material );
+
+    floor.position.set( 0, -85, 0 );
+    floor.rotation.x = - Math.PI * 0.5;
+    floor.receiveShadow = true;
+    r.add( floor );
     this.#sceneObjects.push(floor)
 
-    //Origami 1
+    // ################################################### ORIGAMI 1 ###################################################
+
     geometry = new THREE.BufferGeometry();
 
     var vertices = new Float32Array( [
@@ -258,17 +267,19 @@ class Main {
       ]);
 
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-    material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    material = new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } );
     let object = new THREE.Mesh( geometry, material );
 
     object.position.x = -50
     object.position.y = 15
     object.position.z = 0
+    object.castShadow = true
 
     r.add(object)
     this.#sceneObjects.push(object)
 
-    //Origami 2
+    // ################################################### ORIGAMI 2 ###################################################
+
     geometry = new THREE.BufferGeometry();
 
     var vertices = new Float32Array( [
@@ -307,15 +318,40 @@ class Main {
       ]);
 
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-    material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    material = new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } );
     object = new THREE.Mesh( geometry, material );
 
     object.position.x = 0
     object.position.y = 15
     object.position.z = 10
+    object.castShadow = true
 
     r.add(object)
     this.#sceneObjects.push(object)
+
+    // #################################################### LIGHTS #####################################################
+
+    const directLight = new THREE.DirectionalLight( 0xffffff, 0.1 );
+    directLight.position.set(0, 80, 80)
+    r.add(directLight)
+
+    let spotLight = new THREE.SpotLight(0xffffff, 1);
+    spotLight.position.set(30, 80, 35);
+    spotLight.angle = Math.PI / 4;
+    spotLight.penumbra = 0.1;
+    spotLight.decay = 2;
+    spotLight.distance = 200;
+
+    spotLight.castShadow = true;
+    spotLight.shadow.mapSize.width = 512;
+    spotLight.shadow.mapSize.height = 512;
+    spotLight.shadow.camera.near = 10;
+    spotLight.shadow.camera.far = 200;
+    spotLight.shadow.focus = 1;
+    r.add(spotLight);
+
+    let lightHelper = new THREE.SpotLightHelper(spotLight);
+    r.add(lightHelper);
 
     scene.add(r)
 
