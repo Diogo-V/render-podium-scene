@@ -49,12 +49,8 @@ class CameraPlugin {
    * Builds Three.js camera with a stereo view of the spaceship.
    */
   #buildStereoCamera(scene) {
-    let camera = new THREE.S(45, window.innerWidth / window.innerHeight, 1, 1000)
-    camera.position.x = 150
-    camera.position.y = 100
-    camera.position.z = 150
-    camera.lookAt(scene.position)
-    this.#perspective = camera
+    let camera = new THREE.StereoCamera()
+    this.#stereo = camera
   }
 
   /**
