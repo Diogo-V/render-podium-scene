@@ -121,4 +121,14 @@ class LightsPlugin {
     this.#spotLightRight.visible = ! this.#spotLightRight.visible
   }
 
+  /**
+   * Resets lights' state.
+   */
+  resetLights() {
+    this.#directionalLight.visible = true
+    this.#spotLightLeft.visible = true
+    this.#spotLightMiddle.visible = true
+    this.#spotLightRight.visible = true
+  }
+
 }

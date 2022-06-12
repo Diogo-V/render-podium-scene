@@ -38,6 +38,9 @@ class Main {
    */
   #sceneObjects
 
+  /**
+   * Allows scaling the whole scene.
+   */
   #sceneScale
 
   /**
@@ -52,9 +55,9 @@ class Main {
     let [scene, sceneScale]  = this.#initScene()
     this.#sceneScale = sceneScale
     this.#scene = scene
+    this.#clock = new THREE.Clock(true)
     this.#context = new ContextManagementEngine(this.getScene())
     this.#controller = new KeyController()
-    this.#clock = new THREE.Clock(true)
 
     /* Renders everything in the UI */
     this.#display()
@@ -400,11 +403,8 @@ class Main {
    */
   #update = () => {
 
-    /* Gets the elapsed time from the previous frame. This makes fps smoother in lower end pc's */
-    let delta = this.getClock().getDelta()
-
     /* Prompts key controller to check which keys were pressed and to delegate actions to the various components */
-    this.getController().processKeyPressed(this.getContext(), this.getSceneObjects(), this.getCompound(), delta)
+    this.getController().processKeyPressed(this.getContext(), this.getSceneObjects(), this.getCompound(), this.getClock())
 
   }
 

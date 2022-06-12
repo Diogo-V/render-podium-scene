@@ -19,7 +19,9 @@ class KeyController {
       67: false,
       68: false,
       88: false,
-      90: false
+      90: false,
+      82: false,
+      83: false,
     }
 
   }
@@ -65,14 +67,13 @@ class KeyController {
    * @param context {ContextManagementEngine}
    * @param objects {Array<Mesh>}
    * @param compound {CompoundObject}
-   * @param delta {number}
+   * @param clock {Clock}
    */
-  processKeyPressed = (context, objects, compound, delta) => {
+  processKeyPressed = (context, objects, compound, clock) => {
     'use strict'
 
-    // Holds array with currently being pressed direction. This will be latter on passed to the compound object's
-    // movement and calculate the total movement vector
-    let movement = []
+    /* Gets the elapsed time from the previous frame. This makes fps smoother in lower end pc's */
+    let delta = clock.getDelta()
 
     /* Changes camera angle */
     if (this.getMap()[49]) {  // key -> 1
@@ -116,6 +117,17 @@ class KeyController {
       this.getMap()[67] = false
     }
 
+    /* Resets scene */
+    if (this.getMap()[82] && context.getScenePausedState()) {  // key -> r
+      context.resetScene()
+      this.getMap()[82] = false
+    }
+
+    /* Pauses scene */
+    if (this.getMap()[83]) {  // key -> s
+      context.pauseScene()
+      this.getMap()[83] = false
+    }
 
   }
 

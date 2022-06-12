@@ -14,11 +14,17 @@ class ContextManagementEngine {
   #lights
 
   /**
+   * Holds scene state plugin. Allows resetting and pausing the scene.
+   */
+  #sceneState
+
+  /**
    * ContextManagementEngine class constructor.
    */
   constructor(scene) {
     this.#camera = new CameraPlugin(scene)
     this.#lights = new LightsPlugin(scene)
+    this.#sceneState = new SceneStatePlugin()
   }
 
   /**
@@ -46,6 +52,30 @@ class ContextManagementEngine {
    */
   getLights() {
     return this.#lights
+  }
+
+  /**
+   * Resets scene to the initial state.
+   */
+  resetScene() {
+    this.getLights().resetLights()
+    this.setCamera(CameraPlugin.PERSPECTIVE)
+  }
+
+  /**
+   * Toggles scene paused state.
+   */
+  pauseScene() {
+    this.#sceneState.togglePaused()
+  }
+
+  /**
+   * Returns boolean that tells us if the scene is paused or not.
+   *
+   * @return {boolean}
+   */
+  getScenePausedState() {
+    return this.#sceneState.getState()
   }
 
 }
