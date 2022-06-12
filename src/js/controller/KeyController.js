@@ -76,13 +76,13 @@ class KeyController {
 
     /* Changes camera angle */
     if (this.getMap()[49]) {  // key -> 1
-      context.setCamera(CameraPlugin.FRONTAL)
+      context.setCamera(CameraPlugin.PERSPECTIVE)
       this.getMap()[49] = false
     }
 
     /* Changes camera angle */
     if (this.getMap()[50]) {  // key -> 2
-      context.setCamera(CameraPlugin.SIDE)
+      context.setCamera(CameraPlugin.SCENE)
       this.getMap()[50] = false
     }
 

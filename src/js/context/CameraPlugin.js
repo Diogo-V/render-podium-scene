@@ -9,9 +9,9 @@ class CameraPlugin {
   #currentCamera
 
   /**
-   * Three.js camera that has a front view in the current scene.
+   * Three.js camera that has a perspective view of the scene.
    */
-  #front
+  #perspective
 
   /**
    * Three.js camera that follows the spaceship in the current scene.
@@ -19,22 +19,22 @@ class CameraPlugin {
   #follow
 
   /**
-   * Three.js camera that has a side view in the current scene.
+   * Three.js camera that has a frontal view of the scene.
    */
-  #side
+  #scene
 
   /**
-   * CameraPlugin class constructor. We set the frontal camera as the default one.
+   * CameraPlugin class constructor. We set the perspective camera as the default one.
    */
   constructor(scene, followCamera) {
     this.#buildPerspectiveCamera(scene)
     this.#buildFollowCamera(followCamera)
     this.#buildSceneCamera(scene)
-    this.#currentCamera = this.#front
+    this.#currentCamera = this.#perspective
   }
 
   /**
-   * Builds Three.js camera with a front view of the scene.
+   * Builds Three.js camera with a perspective view of the scene.
    */
   #buildPerspectiveCamera(scene) {
     let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
@@ -42,7 +42,7 @@ class CameraPlugin {
     camera.position.y = 100
     camera.position.z = 150
     camera.lookAt(scene.position)
-    this.#front = camera
+    this.#perspective = camera
   }
 
   /**
@@ -53,16 +53,17 @@ class CameraPlugin {
   }
 
   /**
-   * Builds Three.js camera with a side view of the scene.
+   * Builds Three.js camera with a frontal view of the scene.
    */
   #buildSceneCamera(scene) {
-    let camera = new THREE.OrthographicCamera(window.innerWidth / -__SHIFT_FRONTAL, window.innerWidth / __SHIFT_FRONTAL,
-    window.innerHeight / __SHIFT_FRONTAL, window.innerHeight / -__SHIFT_FRONTAL)
+    let shift = 8
+    let camera = new THREE.OrthographicCamera(window.innerWidth / -shift, window.innerWidth / shift,
+                                              window.innerHeight / shift, window.innerHeight / -shift)
     camera.position.x = 0
     camera.position.y = 80
     camera.position.z = -200
     camera.lookAt(scene.position)
-    this.#side = camera
+    this.#scene = camera
   }
 
   /**
@@ -81,24 +82,24 @@ class CameraPlugin {
    */
   setCamera(newCameraType) {
     switch (newCameraType) {
-      case __FRONTAL:
-        this.#currentCamera = this.#front
+      case _PERSPECTIVE:
+        this.#currentCamera = this.#perspective
         break
       case __FOLLOW:
         this.#currentCamera = this.#follow
         break
-      case __SIDE:
-        this.#currentCamera = this.#side
+      case _SCENE:
+        this.#currentCamera = this.#scene
     }
   }
 
   /**
-   * Gets frontal const value. Is mainly used to change the type of camera being used in the scene.
+   * Gets perspective const value. Is mainly used to change the type of camera being used in the scene.
    *
-   * @returns {number} frontal const value
+   * @returns {number} perspective const value
    */
-  static get FRONTAL() {
-    return __FRONTAL
+  static get PERSPECTIVE() {
+    return _PERSPECTIVE
   }
 
   /**
@@ -111,17 +112,16 @@ class CameraPlugin {
   }
 
   /**
-   * Gets side const value. Is mainly used to change the type of camera being used in the scene.
+   * Gets scene const value. Is mainly used to change the type of camera being used in the scene.
    *
-   * @returns {number} side const value
+   * @returns {number} scene const value
    */
-  static get SIDE() {
-    return __SIDE
+  static get SCENE() {
+    return _SCENE
   }
 
 }
 
 
 /* Holds type of camera that can be instantiated (front, top and side view) */
-const __FRONTAL = 0, __FOLLOW = 1, __SIDE = 2
-const __SHIFT_FRONTAL = 8
+const _PERSPECTIVE = 0, __FOLLOW = 1, _SCENE = 2
