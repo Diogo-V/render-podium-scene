@@ -14,9 +14,9 @@ class CameraPlugin {
   #perspective
 
   /**
-   * Three.js camera that follows the spaceship in the current scene.
+   * Three.js camera that has a stereo view of the scene.
    */
-  #follow
+  #stereo
 
   /**
    * Three.js camera that has a frontal view of the scene.
@@ -26,9 +26,9 @@ class CameraPlugin {
   /**
    * CameraPlugin class constructor. We set the perspective camera as the default one.
    */
-  constructor(scene, followCamera) {
+  constructor(scene) {
     this.#buildPerspectiveCamera(scene)
-    this.#buildFollowCamera(followCamera)
+    this.#buildStereoCamera(scene)
     this.#buildSceneCamera(scene)
     this.#currentCamera = this.#perspective
   }
@@ -46,10 +46,15 @@ class CameraPlugin {
   }
 
   /**
-   * Builds Three.js camera with a follow view of the spaceship.
+   * Builds Three.js camera with a stereo view of the spaceship.
    */
-  #buildFollowCamera(camera) {
-    this.#follow = camera
+  #buildStereoCamera(scene) {
+    let camera = new THREE.S(45, window.innerWidth / window.innerHeight, 1, 1000)
+    camera.position.x = 150
+    camera.position.y = 100
+    camera.position.z = 150
+    camera.lookAt(scene.position)
+    this.#perspective = camera
   }
 
   /**
@@ -85,8 +90,8 @@ class CameraPlugin {
       case _PERSPECTIVE:
         this.#currentCamera = this.#perspective
         break
-      case __FOLLOW:
-        this.#currentCamera = this.#follow
+      case _STEREO:
+        this.#currentCamera = this.#stereo
         break
       case _SCENE:
         this.#currentCamera = this.#scene
@@ -103,12 +108,12 @@ class CameraPlugin {
   }
 
   /**
-   * Gets follow const value. Is mainly used to change the type of camera being used in the scene.
+   * Gets stereo const value. Is mainly used to change the type of camera being used in the scene.
    *
    * @returns {number} follow const value
    */
-  static get FOLLOW() {
-    return __FOLLOW
+  static get STEREO() {
+    return _STEREO
   }
 
   /**
@@ -124,4 +129,4 @@ class CameraPlugin {
 
 
 /* Holds type of camera that can be instantiated (front, top and side view) */
-const _PERSPECTIVE = 0, __FOLLOW = 1, _SCENE = 2
+const _PERSPECTIVE = 0, _STEREO = 1, _SCENE = 2
