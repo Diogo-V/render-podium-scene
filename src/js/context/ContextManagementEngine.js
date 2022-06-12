@@ -39,4 +39,13 @@ class ContextManagementEngine {
     this.#camera.setCamera(newCameraType)
   }
 
+  /**
+   * Gets lights plugin instance.
+   *
+   * @return {LightsPlugin} lights
+   */
+  getLights() {
+    return this.#lights
+  }
+
 }

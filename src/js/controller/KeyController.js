@@ -16,10 +16,10 @@ class KeyController {
       49: false,
       50: false,
       51: false,
-      37: false,
-      38: false,
-      39: false,
-      40: false,
+      67: false,
+      68: false,
+      88: false,
+      90: false
     }
 
   }
@@ -92,25 +92,30 @@ class KeyController {
       this.getMap()[51] = false
     }
 
-    /* Moves articulated object up */
-    if (this.getMap()[38]) {  // key -> up
-      movement.push(Direction.UP)
+    /* Turns on/off directional light */
+    if (this.getMap()[68]) {  // key -> d
+      context.getLights().toggleDirectionalLight()
+      this.getMap()[68] = false
     }
 
-    /* Moves articulated object down */
-    if (this.getMap()[40]) {  // key -> down
-      movement.push(Direction.DOWN)
+    /* Turns on/off left light */
+    if (this.getMap()[90]) {  // key -> z
+      context.getLights().toggleLeftSpotlight()
+      this.getMap()[90] = false
     }
 
-    /* Moves articulated object to the left */
-    if (this.getMap()[37]) {  // key -> left
-      movement.push(Direction.LEFT)
+    /* Turns on/off middle light */
+    if (this.getMap()[88]) {  // key -> x
+      context.getLights().toggleMiddleSpotlight()
+      this.getMap()[88] = false
     }
 
-    /* Moves articulated object to the right */
-    if (this.getMap()[39]) {  // key -> right
-      movement.push(Direction.RIGHT)
+    /* Turns on/off right light */
+    if (this.getMap()[67]) {  // key -> c
+      context.getLights().toggleRightSpotlight()
+      this.getMap()[67] = false
     }
+
 
   }
 

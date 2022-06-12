@@ -51,7 +51,7 @@ class LightsPlugin {
    * @param scene {Scene} scene to apply lights to
    */
   #buildSpotlights(scene) {
-    [-30, 0, 30].map((x) => {
+    const spotlights = [-30, 0, 30].map((x) => {
 
       let geometry = new THREE.SphereGeometry(2, 32, 32)
       let material = new THREE.MeshPhongMaterial({color: 0xffffff, dithering: true})
@@ -83,7 +83,14 @@ class LightsPlugin {
       spotLight.shadow.focus = 1;
       scene.add(spotLight);
 
+      return spotLight
+
     })
+
+    this.#spotLightLeft = spotlights[0]
+    this.#spotLightMiddle = spotlights[1]
+    this.#spotLightRight = spotlights[2]
+
   }
 
   /**
@@ -91,6 +98,27 @@ class LightsPlugin {
    */
   toggleDirectionalLight() {
     this.#directionalLight.visible = ! this.#directionalLight.visible
+  }
+
+  /**
+   * Toggles left light's visibility.
+   */
+  toggleLeftSpotlight() {
+    this.#spotLightLeft.visible = ! this.#spotLightLeft.visible
+  }
+
+  /**
+   * Toggles middle light's visibility.
+   */
+  toggleMiddleSpotlight() {
+    this.#spotLightMiddle.visible = ! this.#spotLightMiddle.visible
+  }
+
+  /**
+   * Toggles right light's visibility.
+   */
+  toggleRightSpotlight() {
+    this.#spotLightRight.visible = ! this.#spotLightRight.visible
   }
 
 }
