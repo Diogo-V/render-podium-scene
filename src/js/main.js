@@ -327,6 +327,63 @@ class Main {
     r.add(object)
     this.#sceneObjects.push(object)
 
+    // ################################################### ORIGAMI 3 ###################################################
+    geometry = new THREE.BufferGeometry();
+
+    var vertices = new Float32Array( [
+      0,0,0,
+      2.2,-3,1.1,
+      14.7,2.7,0,
+
+      2.2,-3,1.1,
+      10.9,-3,1.9,
+      14.7,2.7,0,
+
+      0,0,0,
+      2.2,-3,-1.1,
+      14.7,2.7,0,
+
+      2.2,-3,-1.1,
+      10.9,-3,-1.9,
+      14.7,2.7,0,
+
+      0,0,0,
+      2.2,-3,1.1,
+      3,9.6,0,
+
+      2.2,-3,1.1,
+      4.2,9.3,0.8,
+      3,9.6,0,
+
+      0,0,0,
+      2.2,-3,-1.1,
+      3,9.6,0,
+
+      2.2,-3,-1.1,
+      4.2,9.3,-0.8,
+      3,9.6,0,
+
+      -0.5,8,0,
+      4.2,9.3,0.8,
+      3,9.6,0,
+
+      -0.5,8,0,
+      4.2,9.3,-0.8,
+      3,9.6,0
+
+    ])
+
+    geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+    material = new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } );
+    object = new THREE.Mesh( geometry, material );
+
+    object.position.x = 30
+    object.position.y = 20
+    object.position.z = 10
+    object.castShadow = true
+    r.add(object)
+    this.#sceneObjects.push(object)
+
     scene.add(r)
 
   }
