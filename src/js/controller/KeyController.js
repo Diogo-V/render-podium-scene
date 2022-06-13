@@ -16,6 +16,7 @@ class KeyController {
       49: false,
       50: false,
       51: false,
+      65: false,
       67: false,
       68: false,
       88: false,
@@ -65,7 +66,7 @@ class KeyController {
    * Analyses which keys where pressed and performs the requested actions for those keys.
    *
    * @param context {ContextManagementEngine}
-   * @param objects {Array<Mesh>}
+   * @param objects {Array<CompoundObject>}
    * @param compound {CompoundObject}
    * @param clock {Clock}
    */
@@ -126,7 +127,18 @@ class KeyController {
     /* Pauses scene */
     if (this.getMap()[83]) {  // key -> s
       context.pauseScene()
+      objects.forEach((obj) => {
+        obj.toggleCastingShadow()
+      })
       this.getMap()[83] = false
+    }
+
+    /* Changes material being used in the scene */
+    if (this.getMap()[65]) {  // key -> a
+      objects.forEach((obj) => {
+        obj.toggleMeshes()
+      })
+      this.getMap()[65] = false
     }
 
   }

@@ -1,48 +1,40 @@
 class CompoundObject {
 
   /**
-   * Holds main object of this composition.
-   */
-  #primary
-
-  /**
    * Three.js group object that is going to be added to the scene.
    */
   #group
+
+  /**
+   * Holds meshes to be applied to each individual object in the group.
+   */
+  #meshPhong
+
+  /**
+   * Holds meshes to be applied to each individual object in the group.
+   */
+  #meshLambert
+
+  /**
+   * Holds currently applied mesh.
+   */
+  #appliedMesh
+
+  /**
+   * Tells us if the current object is casting a shadow or not.
+   */
+  #isCastingShadow
 
   /**
    * CompoundObject class constructor.
    */
   constructor() {
     this.#group = new THREE.Group()
+    this.#meshLambert = null
+    this.#meshPhong = null
+    this.#appliedMesh = _PHONG
+    this.#isCastingShadow = true
   }
-
-  /**
-   * Sets primary object.
-   *
-   * @param primary {THREE.Mesh}
-   */
-  setPrimary(primary) {
-    this.getGroup().add(primary)
-    this.#primary = primary
-  }
-
-  /**
-   * Sets secondary object.
-   *
-   * @param secondary {THREE.Mesh}
-   */
-  setSecondary(secondary) {
-    this.getGroup().add(secondary)
-    this.getPrimary().add(secondary)
-  }
-
-  /**
-   * Gets primary object.
-   *
-   * @return {Mesh}
-   */
-  getPrimary() { return this.#primary }
 
   /**
    * Gets scene group.
@@ -52,60 +44,55 @@ class CompoundObject {
   getGroup() { return this.#group }
 
   /**
-   * Applies a rotation to our primary object.
+   * Adds object to group.
    *
-   * @param radius {number} world radius
-   * @param theta {number} theta angle
-   * @param phi {number} phi angle
-   *
-   * @return number[] -> [x, y, z]
+   * @param object
    */
-  #applySphericalRotation(radius, theta, phi) {
-    return [
-      Math.sin(phi) * radius * Math.sin(theta) - this.getPrimary().position.x,
-      Math.cos(phi) * radius - this.getPrimary().position.y,
-      Math.sin(phi) * radius * Math.cos(theta) - this.getPrimary().position.z
-    ]
+  addToGroup(object) {
+    this.getGroup().add(object)
   }
 
   /**
-   * Moves articulated object in input direction by changing the position values of the group.
+   * Updates currently saved phong mesh.
    *
-   * @param directions {Array<Direction>}
-   * @param delta {number}
-   * @param radius {number} world radius
+   * @param mesh phong mesh
    */
-  move(directions, delta, radius) {
+  addPhongMesh(mesh) {
+    this.#meshPhong = mesh
+  }
 
-    /* Calculates theta and phi so that we can rotate the spaceship */
-    let {x, y, z} = this.getPrimary().position
-    let theta = Math.atan2(x, z)
-    let phi = Math.acos(Math.max(-1, Math.min(1, y / radius)))
+  /**
+   * Updates currently saved lambert mesh.
+   *
+   * @param mesh phong mesh
+   */
+  addLambertMesh(mesh) {
+    this.#meshLambert = mesh
+  }
 
-    /* Calculates new x, z, y values based on the rotation of the spaceship */
-    let totalMovementVector = new THREE.Vector3(0, 0, 0)
-    directions.forEach((direction) => {
-      switch (direction) {
-        case Direction.UP:
-          totalMovementVector.add(new THREE.Vector3(...this.#applySphericalRotation(radius, theta, phi - _MOVE_STEP * delta)))
-          break
-        case Direction.DOWN:
-          totalMovementVector.add(new THREE.Vector3(...this.#applySphericalRotation(radius, theta, phi + _MOVE_STEP * delta)))
-          break
-        case Direction.LEFT:
-          totalMovementVector.add(new THREE.Vector3(...this.#applySphericalRotation(radius, theta - _MOVE_STEP * delta, phi)))
-          break
-        case Direction.RIGHT:
-          totalMovementVector.add(new THREE.Vector3(...this.#applySphericalRotation(radius, theta + _MOVE_STEP * delta, phi)))
-          break
-      }
+  /**
+   * Toggles between meshes.
+   */
+  toggleMeshes() {
+    let mesh = this.#appliedMesh === _PHONG ? this.#meshLambert : this.#meshPhong
+    this.getGroup().children.forEach((obj) => {
+      obj.material = mesh
     })
+    this.#appliedMesh = this.#appliedMesh === _PHONG ? _LAMBERT : _PHONG
+  }
 
-    /* Applies rotation values */
-    this.getPrimary().position.add(totalMovementVector.normalize())
-
+  /**
+   * Toggles between casting shadows.
+   */
+  toggleCastingShadow() {
+    this.getGroup().children.forEach((obj) => {
+      obj.castShadow = !this.#isCastingShadow
+      obj.receiveShadow = !this.#isCastingShadow
+    })
+    this.#isCastingShadow = ! this.#isCastingShadow
   }
 
 }
 
-const _MOVE_STEP = 2
+
+const _LAMBERT = 0, _PHONG = 1

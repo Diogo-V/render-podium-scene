@@ -34,7 +34,7 @@ class Main {
   /**
    * Holds all the objects that were added to the scene.
    * 
-   * @type {Array<THREE.Mesh>}
+   * @type {Array<CompoundObject>}
    */
   #sceneObjects
 
@@ -185,7 +185,13 @@ class Main {
     let body
     let top
 
+    scene.background = new THREE.Color(0x05879e);
+
     // #################################################### PODIUM #####################################################
+
+    let podium = new CompoundObject()
+    podium.addPhongMesh(new THREE.MeshPhongMaterial({color: 0xA0522D, dithering: true}))
+    podium.addLambertMesh(new THREE.MeshLambertMaterial({color: 0xA0522D}))
 
     width = 60  // ui: width
     height = 15  // ui: height
@@ -197,8 +203,8 @@ class Main {
     step.position.y = -80
     step.position.z = -5
     step.castShadow = true;
-    r.add(step)
-    this.#sceneObjects.push(step)
+    step.receiveShadow = true;
+    podium.addToGroup(step)
 
     width = 60  // ui: width
     height = 10  // ui: height
@@ -210,8 +216,8 @@ class Main {
     step.position.y = -67.5
     step.position.z = 5
     step.castShadow = true;
-    r.add(step)
-    this.#sceneObjects.push(step)
+    step.receiveShadow = true;
+    podium.addToGroup(step)
 
     width = 35  // ui: width
     height = 60  // ui: height
@@ -223,8 +229,8 @@ class Main {
     body.position.y = -32.5
     body.position.z = 18
     body.castShadow = true;
-    r.add(body)
-    this.#sceneObjects.push(body)
+    body.receiveShadow = true;
+    podium.addToGroup(body)
 
     width = 100  // ui: width
     height = 10  // ui: height
@@ -236,10 +242,17 @@ class Main {
     top.position.y = 2.5
     top.position.z = 18
     top.castShadow = true;
-    r.add(top)
-    this.#sceneObjects.push(top)
+    top.receiveShadow = true;
+    podium.addToGroup(top)
+
+    r.add(podium.getGroup())
+    this.#sceneObjects.push(podium)
 
     // ##################################################### FLOOR #####################################################
+
+    let floorCO = new CompoundObject()
+    floorCO.addPhongMesh(new THREE.MeshPhongMaterial( { color: 0x00FF00, dithering: true } ))
+    floorCO.addLambertMesh(new THREE.MeshLambertMaterial( { color: 0x00FF00} ))
 
     material = new THREE.MeshPhongMaterial( { color: 0x00FF00, dithering: true } );
     geometry = new THREE.PlaneGeometry( 2000, 2000 );
@@ -248,10 +261,16 @@ class Main {
     floor.position.set( 0, -85, 0 );
     floor.rotation.x = - Math.PI * 0.5;
     floor.receiveShadow = true;
-    r.add( floor );
-    this.#sceneObjects.push(floor)
+
+    floorCO.addToGroup(floor)
+    r.add(floorCO.getGroup());
+    this.#sceneObjects.push(floorCO)
 
     // ################################################### ORIGAMI 1 ###################################################
+
+    let origami1 = new CompoundObject()
+    origami1.addPhongMesh(new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } ))
+    origami1.addLambertMesh(new THREE.MeshLambertMaterial( { color: 0xff0000 } ))
 
     geometry = new THREE.BufferGeometry();
 
@@ -274,11 +293,17 @@ class Main {
     object.position.y = 15
     object.position.z = 0
     object.castShadow = true
+    object.receiveShadow = true
 
-    r.add(object)
-    this.#sceneObjects.push(object)
+    origami1.addToGroup(object)
+    r.add(origami1.getGroup())
+    this.#sceneObjects.push(origami1)
 
     // ################################################### ORIGAMI 2 ###################################################
+
+    let origami2 = new CompoundObject()
+    origami2.addPhongMesh(new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } ))
+    origami2.addLambertMesh(new THREE.MeshLambertMaterial( { color: 0xff0000 } ))
 
     geometry = new THREE.BufferGeometry();
 
@@ -325,10 +350,18 @@ class Main {
     object.position.y = 15
     object.position.z = 10
     object.castShadow = true
-    r.add(object)
-    this.#sceneObjects.push(object)
+    object.receiveShadow = true
+
+    origami2.addToGroup(object)
+    r.add(origami2.getGroup())
+    this.#sceneObjects.push(origami2)
 
     // ################################################### ORIGAMI 3 ###################################################
+
+    let origami3 = new CompoundObject()
+    origami3.addPhongMesh(new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } ))
+    origami3.addLambertMesh(new THREE.MeshLambertMaterial( { color: 0xff0000 } ))
+
     geometry = new THREE.BufferGeometry();
 
     var vertices = new Float32Array( [
@@ -382,8 +415,11 @@ class Main {
     object.position.y = 20
     object.position.z = 10
     object.castShadow = true
-    r.add(object)
-    this.#sceneObjects.push(object)
+    object.receiveShadow = true
+
+    origami3.addToGroup(object)
+    r.add(origami3.getGroup())
+    this.#sceneObjects.push(origami3)
 
     scene.add(r)
 
