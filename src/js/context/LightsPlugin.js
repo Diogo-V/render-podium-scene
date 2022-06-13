@@ -42,6 +42,7 @@ class LightsPlugin {
     const directLight = new THREE.DirectionalLight( 0xffffff, 0.1 );
     directLight.position.set(0, 80, 80)
     this.#directionalLight = directLight
+    scene.add(directLight.target)
     scene.add(directLight)
   }
 
