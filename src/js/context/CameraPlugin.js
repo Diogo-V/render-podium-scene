@@ -61,8 +61,8 @@ class CameraPlugin {
     let camera = new THREE.OrthographicCamera(window.innerWidth / -shift, window.innerWidth / shift,
                                               window.innerHeight / shift, window.innerHeight / -shift)
     camera.position.x = 0
-    camera.position.y = 80
-    camera.position.z = -200
+    camera.position.y = 20
+    camera.position.z = 200
     camera.lookAt(scene.position)
     this.#scene = camera
   }

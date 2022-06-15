@@ -92,6 +92,18 @@ class CompoundObject {
     this.#isCastingShadow = ! this.#isCastingShadow
   }
 
+  rotateleft(){
+    this.getGroup().children.forEach((obj) => {
+      obj.rotateY(-0.1)
+    })
+  }
+
+  rotateright(){
+    this.getGroup().children.forEach((obj) => {
+      obj.rotateY(0.1)
+    })
+  }
+
 }
 
 

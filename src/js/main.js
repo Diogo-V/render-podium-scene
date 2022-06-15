@@ -269,41 +269,86 @@ class Main {
     // ################################################### ORIGAMI 1 ###################################################
 
     let origami1 = new CompoundObject()
-    origami1.addPhongMesh(new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } ))
-    origami1.addLambertMesh(new THREE.MeshLambertMaterial( { color: 0xff0000 } ))
+    const texture = new THREE.TextureLoader().load( "../resources/textures/origami1.jpg" );
+    texture.wrapS = THREE.RepeatWrapping; 
+    texture.wrapT = THREE.RepeatWrapping;
+    origami1.addPhongMesh(new THREE.MeshPhongMaterial( { map: texture, dithering: true } ))
+    origami1.addLambertMesh(new THREE.MeshLambertMaterial( { map: texture } ))
 
     geometry = new THREE.BufferGeometry();
 
     var vertices = new Float32Array( [
-      0,   0,  10,    // v1
-      15,  15,  15,  // v3
-      0,   30, 10,   // v2
+      0,   0,  0,    // v1
+      15,  15,  5,  // v3
+      0,   30, 0,   // v2
 
-      0,   0,  10,    // v1
-      0,   30, 10,
-      -15, 15,  15,    //v4
+      0,   0,  0,    // v1
+      0,   30, 0,
+      -15, 15,  5,    //v4
+
+      ]);
+
+    var txt = new Float32Array( [
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
 
       ]);
 
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-    material = new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } );
+    geometry.setAttribute( 'uv', new THREE.BufferAttribute( txt, 2 ) );
+
+    geometry.computeVertexNormals()
+    geometry.normalizeNormals()
+
+    material = new THREE.MeshPhongMaterial( { map: texture, dithering: true } )
     let object = new THREE.Mesh( geometry, material );
 
-    object.position.x = -50
+    object.position.x = -30
     object.position.y = 15
-    object.position.z = 0
+    object.position.z = 10
     object.castShadow = true
     object.receiveShadow = true
 
     origami1.addToGroup(object)
+
+    r.add(origami1.getGroup())
+    this.#sceneObjects.push(origami1)
+
+    origami1 = new CompoundObject()
+    origami1.addPhongMesh(new THREE.MeshPhongMaterial( { color: 0xffffff, dithering: true,side: THREE.BackSide } ))
+    origami1.addLambertMesh(new THREE.MeshLambertMaterial( { color: 0xffffff, side: THREE.BackSide } ))
+
+    geometry = new THREE.BufferGeometry();
+
+    geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+
+    geometry.computeVertexNormals()
+    geometry.normalizeNormals()
+
+    material = new THREE.MeshPhongMaterial( { color: 0xffffff, dithering: true, side: THREE.BackSide } )
+    object = new THREE.Mesh( geometry, material );
+
+    object.position.x = -30
+    object.position.y = 15
+    object.position.z = 10
+    object.castShadow = true
+    object.receiveShadow = true
+
+    origami1.addToGroup(object)
+
     r.add(origami1.getGroup())
     this.#sceneObjects.push(origami1)
 
     // ################################################### ORIGAMI 2 ###################################################
 
     let origami2 = new CompoundObject()
-    origami2.addPhongMesh(new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } ))
-    origami2.addLambertMesh(new THREE.MeshLambertMaterial( { color: 0xff0000 } ))
+    origami2.addPhongMesh(new THREE.MeshPhongMaterial( { map: texture, dithering: true } ))
+    origami2.addLambertMesh(new THREE.MeshLambertMaterial( { map: texture } ))
 
     geometry = new THREE.BufferGeometry();
 
@@ -318,33 +363,97 @@ class Main {
 
       0, 0,    0,
       5.5, 24.5, 0,
-      0, 23,   1,
+      0, 23,   0.5,
 
       0, 0,    0,
-      0, 23,   1,
+      0, 23,   0.5,
       -5.5, 24.5, 0,
 
       0, 0,    0,
-      4, 21,   0,
-      0, 23,   1,
+      5, 21,   0,
+      0, 23,   0.9,
 
       0, 0,    0,
-      0, 23,   1,
-      -4, 21,  0,
+      0, 23,   0.9,
+      -5, 21,  0,
 
       0, 0,    0,
-      4, 21,   0,
-      0, 21,  -1,
+      0, 21,  -0.5,
+      5, 21,   0,
 
       0, 0,    0,
-      0, 21,   -1,
-      -4, 21,  0
+      -5, 21,  0,
+      0, 21,   -0.5,
+
+      ]);
+
+    var txt = new Float32Array( [
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
+
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
+
+      0,   0,     // v1
+      1, 0,    //v4
+      1,   1,
+
+      0,   0,     // v1
+      1,   1,   // v2
+      0,  1,   // v3
+
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
 
       ]);
 
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-    material = new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } );
+    geometry.setAttribute( 'uv', new THREE.BufferAttribute( txt, 2 ) );
+
+    material = new THREE.MeshPhongMaterial( { map: texture, dithering: true } );
     object = new THREE.Mesh( geometry, material );
+
+    geometry.computeVertexNormals()
+    geometry.normalizeNormals()
+
+    object.position.x = 0
+    object.position.y = 15
+    object.position.z = 10
+    object.castShadow = true
+    object.receiveShadow = true
+
+    origami2.addToGroup(object)
+    r.add(origami2.getGroup())
+    this.#sceneObjects.push(origami2)
+
+    origami2 = new CompoundObject()
+    origami2.addPhongMesh(new THREE.MeshPhongMaterial( { color: 0xffffff, dithering: true, side:THREE.BackSide } ))
+    origami2.addLambertMesh(new THREE.MeshLambertMaterial( { color: 0xffffff,side:THREE.BackSide } ))
+
+    geometry = new THREE.BufferGeometry();
+
+    geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+
+    material = new THREE.MeshPhongMaterial( { color: 0xffffff, dithering: true,side:THREE.BackSide } );
+    object = new THREE.Mesh( geometry, material );
+
+    geometry.computeVertexNormals()
+    geometry.normalizeNormals()
 
     object.position.x = 0
     object.position.y = 15
@@ -359,8 +468,8 @@ class Main {
     // ################################################### ORIGAMI 3 ###################################################
 
     let origami3 = new CompoundObject()
-    origami3.addPhongMesh(new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } ))
-    origami3.addLambertMesh(new THREE.MeshLambertMaterial( { color: 0xff0000 } ))
+    origami3.addPhongMesh(new THREE.MeshPhongMaterial( { map: texture, dithering: true } ))
+    origami3.addLambertMesh(new THREE.MeshLambertMaterial( { map: texture } ))
 
     geometry = new THREE.BufferGeometry();
 
@@ -374,12 +483,12 @@ class Main {
       14.7,2.7,0,
 
       0,0,0,
-      2.2,-3,-1.1,
       14.7,2.7,0,
+      2.2,-3,-1.1,
 
       2.2,-3,-1.1,
+      14.7,2.7,0,
       10.9,-3,-1.9,
-      14.7,2.7,0,
 
       0,0,0,
       2.2,-3,1.1,
@@ -390,28 +499,124 @@ class Main {
       3,9.6,0,
 
       0,0,0,
-      2.2,-3,-1.1,
       3,9.6,0,
+      2.2,-3,-1.1,
 
       2.2,-3,-1.1,
-      4.2,9.3,-0.8,
       3,9.6,0,
+      4.2,9.3,-0.8,
 
       -0.5,8,0,
       4.2,9.3,0.8,
       3,9.6,0,
 
       -0.5,8,0,
+      3,9.6,0,
       4.2,9.3,-0.8,
-      3,9.6,0
+
+      0,0,0,
+      2.2,-3,1.1,
+      8,1.5,1.2,
+
+      2.2,-3,1.1,
+      6.7,-3,1.5,
+      8,1.5,1.4,
+
+      0,0,0,
+      8,1.5,-1.4,
+      2.2,-3,-1.1,
+
+      2.2,-3,-1.1,
+      8,1.5,-1.4,
+      6.7,-3,-1.5,
+
+      6.7,-3,1.3,
+      10.9,-3,2,
+      8,1.5,1.1,
+
+      6.7,-3,-1.3,
+      8,1.5,-1.1,
+      10.9,-3,-2,
 
     ])
 
+    var txt = new Float32Array( [
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
+
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
+
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
+
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
+
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
+
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
+
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
+
+      0,   0,     // v1
+      0,  1,   // v3
+      1,   1,   // v2
+
+      0,   0,     // v1
+      1,   1,
+      1, 0,    //v4
+
+      ]);
+
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-    material = new THREE.MeshPhongMaterial( { color: 0xff0000, dithering: true } );
+    geometry.setAttribute( 'uv', new THREE.BufferAttribute( txt, 2 ) );
+
+    geometry.computeVertexNormals()
+    geometry.normalizeNormals()
+
+    material = new THREE.MeshPhongMaterial( { map: texture, dithering: true } );
     object = new THREE.Mesh( geometry, material );
 
-    object.position.x = 30
+    object.position.x = 25
     object.position.y = 20
     object.position.z = 10
     object.castShadow = true
@@ -420,6 +625,30 @@ class Main {
     origami3.addToGroup(object)
     r.add(origami3.getGroup())
     this.#sceneObjects.push(origami3)
+
+    origami3 = new CompoundObject()
+    origami3.addPhongMesh(new THREE.MeshPhongMaterial( { color: 0xffffff, dithering: true , side:THREE.BackSide} ))
+    origami3.addLambertMesh(new THREE.MeshLambertMaterial( { color: 0xffffff, side:THREE.BackSide } ))
+
+    geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+
+    geometry.computeVertexNormals()
+    geometry.normalizeNormals()
+
+    material = new THREE.MeshPhongMaterial( { color: 0xffffff, dithering: true, side:THREE.BackSide} );
+    object = new THREE.Mesh( geometry, material );
+
+    object.position.x = 25
+    object.position.y = 20
+    object.position.z = 10
+    object.castShadow = true
+    object.receiveShadow = true
+
+    origami3.addToGroup(object)
+    r.add(origami3.getGroup())
+    this.#sceneObjects.push(origami3)
+
+    geometry = new THREE.BufferGeometry();
 
     scene.add(r)
 
