@@ -130,6 +130,10 @@ class KeyController {
           objects[i].getGroup().children[0].rotation.set(0, 0, 0)
         }
       }
+
+      let clock = new THREE.Clock();
+      context.pauseScene();
+
       this.getMap()[82] = false
     }
 

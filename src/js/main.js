@@ -188,7 +188,6 @@ class Main {
     let body  
     let top
 
-    console.log(scene)
     scene[1].background = new THREE.Color(0x05879e);
 
     // #################################################### PODIUM #####################################################
@@ -206,7 +205,7 @@ class Main {
     step.position.x = 0
     step.position.y = -80
     step.position.z = -5
-    step.castShadow = true;
+    step.castShadow = true; 
     step.receiveShadow = true;
     podium.addToGroup(step)
 
