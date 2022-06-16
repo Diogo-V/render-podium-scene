@@ -272,7 +272,7 @@ class Main {
     // ################################################### ORIGAMI 1 ###################################################
 
     let origami1 = new CompoundObject()
-    let texture = new THREE.TextureLoader().load( "../resources/textures/origami1.jpg" );
+    let texture = new THREE.TextureLoader().load( "../resources/textures/origami1.png" );
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     origami1.addPhongMesh(new THREE.MeshPhongMaterial( { map: texture, dithering: true } ))
