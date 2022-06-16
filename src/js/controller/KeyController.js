@@ -165,42 +165,36 @@ class KeyController {
     if (this.getMap()[81] && !context.getScenePausedState()) {  // key -> q      
       objects[2].rotateleft()
       objects[3].rotateleft()
-      this.getMap()[81] = false
     }
 
     /* Rotates Origami1 Right */
     if (this.getMap()[87] && !context.getScenePausedState()) {  // key -> w
       objects[2].rotateright()
       objects[3].rotateright()
-      this.getMap()[87] = false
     }
 
     /* Rotates Origami2 Left */
     if (this.getMap()[69] && !context.getScenePausedState()) {  // key -> e
       objects[4].rotateleft()
       objects[5].rotateleft()
-      this.getMap()[69] = false
     }
 
     /* Rotates Origami2 Right */
     if (this.getMap()[82]) {  // key -> r
       objects[4].rotateright()
       objects[5].rotateright()
-      this.getMap()[82] = false
     }
 
     /* Rotates Origami3 Left */
     if (this.getMap()[84] && !context.getScenePausedState()) {  // key -> t
       objects[6].rotateleft()
       objects[7].rotateleft()
-      this.getMap()[84] = false
     }
 
     /* Rotates Origami3 Right */
     if (this.getMap()[89] && !context.getScenePausedState()) {  // key -> y
       objects[6].rotateright()
       objects[7].rotateright()
-      this.getMap()[89] = false
     }
 
   }
