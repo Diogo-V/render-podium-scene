@@ -657,7 +657,7 @@ class Main {
     /* ---------------------------------- */
     /* Create paused Screen */
 
-    let spriteMap = new THREE.TextureLoader().load('../../resources/textures/pauseScreen.png');
+    let spriteMap = new THREE.TextureLoader().load('../resources/textures/pauseScreen.png');
     let spriteMaterial = new THREE.SpriteMaterial({
       map: spriteMap
     });
