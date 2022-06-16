@@ -33,7 +33,7 @@ class Main {
 
   /**
    * Holds all the objects that were added to the scene.
-   * 
+   *
    * @type {Array<CompoundObject>}
    */
   #sceneObjects
@@ -52,11 +52,11 @@ class Main {
     this.#renderer = Main.#initRenderer()
     this.#sceneObjects = Array()
     this.#compound = new CompoundObject()
-    let [scene, sceneScale]  = this.#initScene()
+    let [scene, sceneScale] = this.#initScene()
     this.#sceneScale = sceneScale
     this.#scene = scene
     this.#clock = new THREE.Clock(true)
-    this.#context = new ContextManagementEngine(this.getScene())
+    this.#context = new ContextManagementEngine(this.getScene()[1])
     this.#controller = new KeyController()
 
     /* Renders everything in the UI */
@@ -70,7 +70,7 @@ class Main {
 
     /* Clears pressed keys when the user stops clicking it */
     window.addEventListener("keyup", function (event) {
-     this.getController().onKeyUp(event)
+      this.getController().onKeyUp(event)
     }.bind(this), false)
 
     window.addEventListener('resize', function (_) {
@@ -88,7 +88,10 @@ class Main {
     'use strict'
 
     /* Creates scene  */
-    let scene = new THREE.Scene()
+    var scene = Array()
+
+    scene[1] = new THREE.Scene()
+    scene[2] = new THREE.Scene()
 
     let r = new THREE.Object3D()
 
@@ -146,7 +149,7 @@ class Main {
    *
    * @return {THREE.WebGLRenderer}
    */
-  getRenderer() { return this.#renderer }
+    getRenderer() { return this.#renderer }
 
   /**
    * Returns a list with the objects added to the scene.
@@ -182,10 +185,11 @@ class Main {
     let height
     let depth
     let step
-    let body
+    let body  
     let top
 
-    scene.background = new THREE.Color(0x05879e);
+    console.log(scene)
+    scene[1].background = new THREE.Color(0x05879e);
 
     // #################################################### PODIUM #####################################################
 
@@ -269,8 +273,8 @@ class Main {
     // ################################################### ORIGAMI 1 ###################################################
 
     let origami1 = new CompoundObject()
-    const texture = new THREE.TextureLoader().load( "../resources/textures/origami1.jpg" );
-    texture.wrapS = THREE.RepeatWrapping; 
+    let texture = new THREE.TextureLoader().load( "../resources/textures/origami1.jpg" );
+    texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     origami1.addPhongMesh(new THREE.MeshPhongMaterial( { map: texture, dithering: true } ))
     origami1.addLambertMesh(new THREE.MeshLambertMaterial( { map: texture } ))
@@ -286,7 +290,7 @@ class Main {
       0,   30, 0,
       -15, 15,  5,    //v4
 
-      ]);
+    ]);
 
     var txt = new Float32Array( [
       0,   0,     // v1
@@ -297,7 +301,7 @@ class Main {
       1,   1,
       1, 0,    //v4
 
-      ]);
+    ]);
 
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
     geometry.setAttribute( 'uv', new THREE.BufferAttribute( txt, 2 ) );
@@ -385,7 +389,7 @@ class Main {
       -5, 21,  0,
       0, 21,   -0.5,
 
-      ]);
+    ]);
 
     var txt = new Float32Array( [
       0,   0,     // v1
@@ -420,7 +424,7 @@ class Main {
       1,   1,
       1, 0,    //v4
 
-      ]);
+    ]);
 
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
     geometry.setAttribute( 'uv', new THREE.BufferAttribute( txt, 2 ) );
@@ -605,7 +609,7 @@ class Main {
       1,   1,
       1, 0,    //v4
 
-      ]);
+    ]);
 
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
     geometry.setAttribute( 'uv', new THREE.BufferAttribute( txt, 2 ) );
@@ -641,6 +645,7 @@ class Main {
     object.position.x = 25
     object.position.y = 20
     object.position.z = 10
+
     object.castShadow = true
     object.receiveShadow = true
 
@@ -648,9 +653,22 @@ class Main {
     r.add(origami3.getGroup())
     this.#sceneObjects.push(origami3)
 
-    geometry = new THREE.BufferGeometry();
+    scene[1].add(r)
 
-    scene.add(r)
+    /* ---------------------------------- */
+    /* Create paused Screen */
+
+    let spriteMap = new THREE.TextureLoader().load('../../resources/textures/pauseScreen.png');
+    let spriteMaterial = new THREE.SpriteMaterial({
+      map: spriteMap
+    });
+    let pausedScreen = new THREE.Sprite(spriteMaterial);
+    let scaleRatio = 100 * window.innerWidth / window.innerHeight;
+    pausedScreen.scale.set(scaleRatio, scaleRatio, 0);
+    pausedScreen.visible = true;
+    pausedScreen.position.set(0, 0, 20);
+
+    scene[2].add(pausedScreen)
 
   }
 
@@ -659,7 +677,14 @@ class Main {
    */
   #display = () => {
     'use strict'
-    this.getRenderer().render(this.getScene(), this.getContext().getCamera())
+    this.getRenderer().autoClear = false;
+    this.getRenderer().clear();
+    this.getRenderer().render(this.getScene()[1], this.getContext().getCamera())
+
+    if (this.getContext().getScenePausedState()) {
+      this.getRenderer().clearDepth();
+      this.getRenderer().render(this.getScene()[2], this.getContext().getCamera());
+    }
   }
 
   /**
@@ -669,7 +694,7 @@ class Main {
   #update = () => {
 
     /* Prompts key controller to check which keys were pressed and to delegate actions to the various components */
-    this.getController().processKeyPressed(this.getContext(), this.getSceneObjects(), this.getCompound(), this.getClock())
+    this.getController().processKeyPressed(this.getContext(), this.getSceneObjects(), this.getClock())
 
   }
 

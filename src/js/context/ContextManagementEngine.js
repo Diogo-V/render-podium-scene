@@ -67,6 +67,7 @@ class ContextManagementEngine {
    */
   pauseScene() {
     this.#sceneState.togglePaused()
+
   }
 
   /**
@@ -77,5 +78,6 @@ class ContextManagementEngine {
   getScenePausedState() {
     return this.#sceneState.getState()
   }
+
 
 }
