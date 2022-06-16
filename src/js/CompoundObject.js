@@ -82,6 +82,17 @@ class CompoundObject {
   }
 
   /**
+   * Resets meshes to initial state.
+   */
+  resetMeshes() {
+    this.getGroup().children.forEach((obj) => {
+      obj.material = this.#meshPhong
+    })
+    this.#appliedMesh = _PHONG
+  }
+
+
+  /**
    * Toggles between casting shadows.
    */
   toggleCastingShadow() {
@@ -92,13 +103,24 @@ class CompoundObject {
     this.#isCastingShadow = ! this.#isCastingShadow
   }
 
-  rotateleft(){
+  /**
+   * Resets shadows to initial state.
+   */
+  resetShadow() {
+    this.getGroup().children.forEach((obj) => {
+      obj.castShadow = true
+      obj.receiveShadow = true
+    })
+    this.#isCastingShadow = true
+  }
+
+  rotateLeft(){
     this.getGroup().children.forEach((obj) => {
       obj.rotateY(-0.1)
     })
   }
 
-  rotateright(){
+  rotateRight(){
     this.getGroup().children.forEach((obj) => {
       obj.rotateY(0.1)
     })

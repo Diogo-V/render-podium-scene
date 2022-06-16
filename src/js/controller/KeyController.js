@@ -71,14 +71,11 @@ class KeyController {
    * Analyses which keys where pressed and performs the requested actions for those keys.
    *
    * @param context {ContextManagementEngine}
-   * @param objects {Array<Mesh>}
+   * @param objects {Array<CompoundObject>}
    * @param clock {Clock}
    */
   processKeyPressed = (context, objects, clock) => {
     'use strict'
-
-    /* Gets the elapsed time from the previous frame. This makes fps smoother in lower end pc's */
-    let delta = clock.getDelta()
 
     /* Changes camera angle */
     if (this.getMap()[49]) {  // key -> 1
@@ -131,7 +128,11 @@ class KeyController {
         }
       }
 
-      let clock = new THREE.Clock();
+      objects.forEach((obj) => {
+        obj.resetShadow()
+        obj.resetMeshes()
+      })
+
       context.pauseScene();
 
       this.getMap()[82] = false
@@ -143,13 +144,7 @@ class KeyController {
       objects.forEach((obj) => {
         obj.toggleCastingShadow()
       })
-
-      if (context.getScenePausedState){
-        clock.running = true;
-      } else {
-        clock.running = false;
-      }
-
+      clock.running = !!context.getScenePausedState;
       this.getMap()[83] = false
     }
 
@@ -163,38 +158,38 @@ class KeyController {
 
     /* Rotates Origami1 Left */
     if (this.getMap()[81] && !context.getScenePausedState()) {  // key -> q      
-      objects[2].rotateleft()
-      objects[3].rotateleft()
+      objects[2].rotateLeft()
+      objects[3].rotateLeft()
     }
 
     /* Rotates Origami1 Right */
     if (this.getMap()[87] && !context.getScenePausedState()) {  // key -> w
-      objects[2].rotateright()
-      objects[3].rotateright()
+      objects[2].rotateRight()
+      objects[3].rotateRight()
     }
 
     /* Rotates Origami2 Left */
     if (this.getMap()[69] && !context.getScenePausedState()) {  // key -> e
-      objects[4].rotateleft()
-      objects[5].rotateleft()
+      objects[4].rotateLeft()
+      objects[5].rotateLeft()
     }
 
     /* Rotates Origami2 Right */
     if (this.getMap()[82]) {  // key -> r
-      objects[4].rotateright()
-      objects[5].rotateright()
+      objects[4].rotateRight()
+      objects[5].rotateRight()
     }
 
     /* Rotates Origami3 Left */
     if (this.getMap()[84] && !context.getScenePausedState()) {  // key -> t
-      objects[6].rotateleft()
-      objects[7].rotateleft()
+      objects[6].rotateLeft()
+      objects[7].rotateLeft()
     }
 
     /* Rotates Origami3 Right */
     if (this.getMap()[89] && !context.getScenePausedState()) {  // key -> y
-      objects[6].rotateright()
-      objects[7].rotateright()
+      objects[6].rotateRight()
+      objects[7].rotateRight()
     }
 
   }
