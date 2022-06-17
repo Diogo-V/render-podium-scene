@@ -13,6 +13,7 @@ class KeyController {
    */
   constructor() {
     this.#keyMap = {
+      32: false,
       49: false,
       50: false,
       51: false,
@@ -89,12 +90,6 @@ class KeyController {
       this.getMap()[50] = false
     }
 
-    /* Changes camera angle */
-    if (this.getMap()[51]) {  // key -> 3
-      context.setCamera(CameraPlugin.STEREO)
-      this.getMap()[51] = false
-    }
-
     /* Turns on/off directional light */
     if (this.getMap()[68]) {  // key -> d
       context.getLights().toggleDirectionalLight()
@@ -120,8 +115,9 @@ class KeyController {
     }
 
     /* Resets scene */
-    if (this.getMap()[82] && context.getScenePausedState()) {  // key -> R
+    if (this.getMap()[51] ) {  // key -> 3
       context.resetScene()
+
       for (let i = 0; i < objects.length; i++){
         if (i !== 1){
           objects[i].getGroup().children[0].rotation.set(0, 0, 0)
@@ -133,18 +129,23 @@ class KeyController {
         obj.resetMeshes()
       })
 
-      context.pauseScene();
+      if(context.getScenePausedState()) context.pauseScene();
 
-      this.getMap()[82] = false
+      this.getMap()[51] = false
     }
 
     /* Pauses scene */
-    if (this.getMap()[83]) {  // key -> s
+    if (this.getMap()[32]) {  // key -> space
       context.pauseScene()
+      clock.running = !!context.getScenePausedState;
+      this.getMap()[32] = false
+    }
+
+    /* Toggles illumination calculation */
+    if (this.getMap()[83]) {  // key -> s
       objects.forEach((obj) => {
         obj.toggleCastingShadow()
       })
-      clock.running = !!context.getScenePausedState;
       this.getMap()[83] = false
     }
 
@@ -157,7 +158,7 @@ class KeyController {
     }
 
     /* Rotates Origami1 Left */
-    if (this.getMap()[81] && !context.getScenePausedState()) {  // key -> q      
+    if (this.getMap()[81] && !context.getScenePausedState()) {  // key -> q
       objects[2].rotateLeft()
       objects[3].rotateLeft()
     }
